@@ -70,33 +70,19 @@ def print_with_frame_multiline(status, text):
     framed_lines = [f"│ {line.ljust(max_width)} │" for line in lines]
     
     # Выводим рамку с текстом
-    print(Colorate.Horizontal(Colors.green_to_white, '  ┌─ Status: ' + status))
-    print(Colorate.Horizontal(Colors.green_to_white, top_border))
-    for framed_line in framed_lines:
-        print(Colorate.Horizontal(Colors.green_to_white, framed_line))
-    print(Colorate.Horizontal(Colors.green_to_white, bottom_border))
+    if status == "success":
+        print(Colorate.Horizontal(Colors.green_to_white, '  ┌─ Status: ' + status))
+        print(Colorate.Horizontal(Colors.green_to_white, top_border))
+        for framed_line in framed_lines:
+            print(Colorate.Horizontal(Colors.green_to_white, framed_line))
+        print(Colorate.Horizontal(Colors.green_to_white, bottom_border))
+    elif status == "fail":
+        print(Colorate.Horizontal(Colors.red_to_purple, '  ┌─ Status: ' + status))
+        print(Colorate.Horizontal(Colors.red_to_purple, top_border))
+        for framed_line in framed_lines:
+            print(Colorate.Horizontal(Colors.red_to_purple, framed_line))
+        print(Colorate.Horizontal(Colors.red_to_purple, bottom_border))
 
-# Рамка для вывода
-def print_error_with_frame_multiline(status, text):
-    # Разбиваем текст на строки
-    lines = text.split("\n")
-    
-    # Определяем ширину самой длинной строки
-    max_width = max(len(line) for line in lines)
-    
-    # Создаём верхнюю и нижнюю границы рамки
-    top_border = "╔" + "═╧" + "═" * (max_width) + "╗"
-    bottom_border = "╚" + "═" * (max_width + 2) + "╝"
-    
-    # Формируем строки с текстом внутри рамки, с выравниванием по ширине
-    framed_lines = [f"│ {line.ljust(max_width)} │" for line in lines]
-    
-    # Выводим рамку с текстом
-    print(Colorate.Horizontal(Colors.red_to_purple, '  ┌─ Status: ' + status))
-    print(Colorate.Horizontal(Colors.red_to_purple, top_border))
-    for framed_line in framed_lines:
-        print(Colorate.Horizontal(Colors.red_to_purple, framed_line))
-    print(Colorate.Horizontal(Colors.red_to_purple, bottom_border))
 
 # Пробив по номеру
 def check_phone():
@@ -126,9 +112,9 @@ Location:     {location}
 Carrier:      {carrier}
 Type:         {line_type}""")
             else:
-                print_error_with_frame_multiline('fail', f'Query:   {query}\nError:   number is not correct')
+                print_with_frame_multiline('fail', f'Query:   {query}\nError:   number is not correct')
     except Exception as e:
-        print_error_with_frame_multiline('fail', f'Query:   {query}\nError:   number is not correct')
+        print_with_frame_multiline('fail', f'Query:   {query}\nError:   number is not correct')
 
 def check_ip():
     try:
@@ -166,9 +152,9 @@ Isp:      {isp}
 Org:      {org}
 As:       {as_}""")
             else:
-                print_error_with_frame_multiline('fail', f'Query:   {query}\nError:   Ip address is not correct')
+                print_with_frame_multiline('fail', f'Query:   {query}\nError:   Ip address is not correct')
     except Exception as e:
-        print_error_with_frame_multiline('fail', f'Query:   {query}\nError:   unexpected error')
+        print_with_frame_multiline('fail', f'Query:   {query}\nError:   unexpected error')
 
 def validate_email():
     pass
