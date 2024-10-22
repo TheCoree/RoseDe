@@ -3,6 +3,9 @@ import requests
 import time
 import os
 
+from FaceAnimator import FaceAnimator
+
+animator = FaceAnimator()
 
 # Очистка экрана
 def clear_screen():
@@ -26,9 +29,21 @@ def print_banner():
     # Яркий градиент для заголовка
     print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(banner)))
 
+info = """
+╔═════════════════════════════════╗
+│         ROSEDE - V1.1.1         │
+│     AUTORS: Corede, DarkRose    │
+│     CONTACTS: @coredepffical    │
+│         and  @darkrosec         │
+│                                 │
+│             GITHUB:             │
+│    github.com/TheCoree/RoseDe   │
+╚═════════════════════════════════╝
+"""
+
 def print_info():
     info = r"""
-♥ Maked by @coredeoffical and @darkrosec | v1.0.1 ♥"""
+♥ Maked by @coredeoffical and @darkrosec | v1.1.1 ♥"""
     print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(info)))
 
 # Главное меню программы
@@ -51,30 +66,50 @@ def main_menu():
     # Яркий градиент для меню
     print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(menu)))
 
-# Рамка для вывода
-def print_with_frame_multiline(status, text):
-    # Разбиваем текст на строки
-    lines = text.split("\n")
-    
+def wrap_text(text, width):
+    """Разбивает текст на строки фиксированной длины."""
+    words = text.split()
+    lines = []
+    current_line = ""
+
+    for word in words:
+        if len(current_line) + len(word) + 1 <= width:
+            current_line += (word + " ")
+        else:
+            lines.append(current_line.strip())
+            current_line = word + " "
+
+    if current_line:
+        lines.append(current_line.strip())
+
+    return lines
+
+def print_with_frame_multiline(status, text, max_width=80):
+    """Печатает текст в рамке с поддержкой переноса строк."""
+    # Разбиваем текст на строки с заданной шириной
+    wrapped_lines = []
+    for line in text.split("\n"):
+        wrapped_lines.extend(wrap_text(line, max_width))
+
     # Определяем ширину самой длинной строки
-    max_width = max(len(line) for line in lines)
-    
+    frame_width = max(len(line) for line in wrapped_lines)
+
     # Создаём верхнюю и нижнюю границы рамки
-    top_border = "╔" + "═╧" + "═" * (max_width) + "╗"
-    bottom_border = "╚" + "═" * (max_width + 2) + "╝"
-    
+    top_border = "╔" + "═╧" + "═" * (frame_width) + "╗"
+    bottom_border = "╚" + "═" * (frame_width + 2) + "╝"
+
     # Формируем строки с текстом внутри рамки, с выравниванием по ширине
-    framed_lines = [f"│ {line.ljust(max_width)} │" for line in lines]
-    
+    framed_lines = [f"│ {line.ljust(frame_width)} │" for line in wrapped_lines]
+
     # Выводим рамку с текстом
     if status == "success":
-        print(Colorate.Horizontal(Colors.green_to_white, '  ┌─ Status: ' + status))
+        print(Colorate.Horizontal(Colors.green_to_white, f'  ┌─ Status: {status}'))
         print(Colorate.Horizontal(Colors.green_to_white, top_border))
         for framed_line in framed_lines:
             print(Colorate.Horizontal(Colors.green_to_white, framed_line))
         print(Colorate.Horizontal(Colors.green_to_white, bottom_border))
     elif status == "fail":
-        print(Colorate.Horizontal(Colors.red_to_purple, '  ┌─ Status: ' + status))
+        print(Colorate.Horizontal(Colors.red_to_purple, f'  ┌─ Status: {status}'))
         print(Colorate.Horizontal(Colors.red_to_purple, top_border))
         for framed_line in framed_lines:
             print(Colorate.Horizontal(Colors.red_to_purple, framed_line))
@@ -157,7 +192,44 @@ def validate_email():
     pass
 
 def about_software():
-    pass
+    rose_art = """
+    _,--._.-,
+   /\_r-,\\_ )
+.-.) _;='_/ (.;
+ \\ \\'     \/S )
+  L.'-. _.'|-'
+ <_`-'\\'_.'/
+   `'-._( \\
+    ___   \\\,      ___
+    \\ .'-. \\\   .-'_. /
+     '._' '.\\\/.-'_.'
+        '--``\\('--'
+     rosede   \\\\
+              `\\\\,
+                \|"""
+    
+    print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(rose_art)))
+    print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(info)))
+
+def exit_programm():
+    rose_art = """
+    _,--._.-,
+   /\_r-,\\_ )
+.-.) _;='_/ (.;
+ \\ \\'     \/S )
+  L.'-. _.'|-'
+ <_`-'\\'_.'/
+   `'-._( \\
+    ___   \\\,      ___
+    \\ .'-. \\\   .-'_. /
+     '._' '.\\\/.-'_.'
+        '--``\\('--'
+     Good Bye \\\\
+              `\\\\,
+                \|"""
+
+    print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(rose_art)))
+    print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(info)))
 
 def decrypter(query, mixing):
     try:
@@ -209,9 +281,6 @@ def port_scanner():
     Write.Print("Scanning ports...\n", Colors.blue_to_cyan, interval=0.05)
     time.sleep(1)
     Write.Print("Port scan complete!\n", Colors.green_to_black, interval=0.05)
-
-def exit_program():
-    Write.Print("Exiting the program...\n", Colors.white_to_green, interval=0.03)
 
 # Новые тестовые функции
 def get_proxy():
@@ -291,7 +360,7 @@ def main():
         elif choice == "9":
             port_scanner()
         elif choice == "10":
-            exit_program()
+            exit_programm()
             break
         elif choice == "11":
             get_proxy()
@@ -314,6 +383,7 @@ def main():
         elif choice == "20":
             xss_vulnerability_scan()
         else:
+            print(Colorate.Horizontal(Colors.red_to_purple, (animator.say(None, "I don't now this command!"))))
             continue
 
 # Запуск программы
