@@ -4,7 +4,6 @@ import time
 import os
 
 
-
 # Очистка экрана
 def clear_screen():
     if os.name == 'nt':
@@ -12,8 +11,6 @@ def clear_screen():
     else:
         os.system('clear')
 clear_screen()
-
-
 
 
 # Заголовок программы
@@ -31,7 +28,7 @@ def print_banner():
 
 def print_info():
     info = r"""
-♥ Maked by @coredeoffical and @darkrosec | v1.0.0 ♥"""
+♥ Maked by @coredeoffical and @darkrosec | v1.0.1 ♥"""
     print(Colorate.Horizontal(Colors.green_to_white, Center.XCenter(info)))
 
 # Главное меню программы
@@ -173,7 +170,7 @@ def decrypter(query, mixing):
             message = message + chr(int(final))
         print_with_frame_multiline('success', message)
     except Exception as e:
-        print_error_with_frame_multiline('fail', f'Query:   {query}\nError:   unexpected error')
+        print_with_frame_multiline('fail', f'Query:   {query}\nError:   unexpected error')
 
 def ahc_decrypt():
     try:
@@ -189,9 +186,9 @@ def ahc_decrypt():
             elif i.isdigit() and mixing is None:
                 mixing = i
         if key == None and mixing == None:
-            print_error_with_frame_multiline('fail', f'Query:   {query}\nError:   mixing and key not found')
+            print_with_frame_multiline('fail', f'Query:   {query}\nError:   mixing and key not found')
     except Exception as e:
-        print_error_with_frame_multiline('fail', f'Query:   {query}\nError:   unexpected error')
+        print_with_frame_multiline('fail', f'Query:   {query}\nError:   unexpected error')
 
 
 def info_website():
